@@ -73,5 +73,11 @@ gfxCommand
     .argument('[path]', '対象フォルダ', '.')
     .action((path) => runGfx('convert', path));
 
+gfxCommand
+    .command('check-missing')
+    .description('GFX定義ファイルで参照されている存在しない画像をリストアップ')
+    .argument('[path]', '対象フォルダ', '.')
+    .action((path) => runGfx('check-missing', path));
+
 
 program.parse();
