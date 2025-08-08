@@ -2,6 +2,7 @@
 import { Command } from 'commander';
 import { createMod } from './commands/create-mod.js';
 import { runLint } from './commands/lint.js';
+import { runMissingKeyScan } from './commands/missing_key.js';
 import { showEquation } from './commands/showEquation.js';
 
 const DEFAULT_MOD_DIR =
@@ -31,6 +32,12 @@ program
     .description('DSL 構文チェック')
     .argument('[path]', '対象フォルダ', '.')
     .action(runLint);
+
+program
+    .command('missing-key')
+    .description('未定義キーを一覧化')
+    .argument('[path]', '対象フォルダ', '.')
+    .action(runMissingKeyScan);
 
 program
     .command('show-equation')
