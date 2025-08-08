@@ -7,6 +7,8 @@ export async function runLint(target = '.') {
     const baseDir = path.resolve(process.cwd(), target);
     const results = await lintDirectory(baseDir);
 
+    console.log(chalk.blue(`\n🔍 Scanned ${results.length} files.`));
+
     let errorCnt = 0;
     for (const { file, issues } of results) {
         if (!issues.length) continue;
