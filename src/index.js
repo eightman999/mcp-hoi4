@@ -3,6 +3,7 @@ import { Command } from 'commander';
 import { createMod } from './commands/create-mod.js';
 import { runLint } from './commands/lint.js';
 import { showEquation } from './commands/showEquation.js';
+import { getFontInfo } from './commands/get-font-info.js';
 
 const DEFAULT_MOD_DIR =
   process.platform === 'win32'
@@ -38,5 +39,11 @@ program
     .argument('<file>', '対象ファイル')
     .argument('<variable>', '対象の変数名')
     .action(showEquation);
+
+program
+    .command('get-font-info')
+    .description('フォントファイル (.fnt) からフォント名とサイズを抽出')
+    .argument('[path]', '対象フォルダ', '.')
+    .action(getFontInfo);
 
 program.parse();
