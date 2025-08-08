@@ -33,31 +33,107 @@ const VAR_CHECK_TRIGGERS = new Set([
     'check_variable', 'has_variable',
 ]);
 
+const REFERENCE_CHECKS = [
+    {
+        key: 'add_ideas',
+        definitionType: 'ideaNames',
+        regex: /^\s*add_ideas\s*=\s*([a-zA-Z0-9_]+)/,
+    },
+];
+
 /**
  * ディレクトリ以下の .txt を全部チェック
- * @returns {Promise<{file:string, issues:Array}>[]}
+ * @returns {Promise<{file:string, issues:Array<{line:number, msg:string, level:'warn'|'error'}>}[]>}
  */
 export async function lintDirectory(baseDir) {
-    const out = [];
     const lintingContext = {
         definitions: {
             countryTags: new Map(),
             stateIds: new Map(),
             equipmentNames: new Map(),
+            ideaNames: new Map(),
         },
     };
 
+    const allFilePaths = [];
     for await (const file of walk(baseDir)) {
-        const txt = await fs.readFile(file, 'utf-8');
-        const issues = lintText(txt, file, baseDir, lintingContext);
-        out.push({ file, issues });
+        allFilePaths.push(file);
     }
+
+    // Pass 1: Gather all definitions for referential integrity checks.
+    // This pass ignores duplicates, simply gathering the first one found.
+    for (const filePath of allFilePaths) {
+        const relativePath = path.relative(baseDir, filePath);
+        const fileType = getFileType(relativePath);
+        if (!fileType) continue;
+
+        const defMap = lintingContext.definitions[fileType.mapTo];
+        if (!defMap) continue;
+
+        const txt = await fs.readFile(filePath, 'utf-8');
+        const lines = txt.split(/\r?\n/);
+        lines.forEach((lineText, idx) => {
+            const def = extractDefinition(lineText, fileType.regex);
+            if (def && !defMap.has(def)) {
+                defMap.set(def, { file: filePath, line: idx + 1 });
+            }
+        });
+    }
+
+    // Pass 2: Lint files and check for duplicate definitions.
+    const out = [];
+    const duplicateCheckContext = {
+        definitions: {
+            countryTags: new Map(),
+            stateIds: new Map(),
+            equipmentNames: new Map(),
+            ideaNames: new Map(),
+        },
+    };
+
+    for (const filePath of allFilePaths) {
+        const txt = await fs.readFile(filePath, 'utf-8');
+        // `lintText` is now only responsible for content-based linting, using the pre-filled context.
+        const issues = lintText(txt, filePath, baseDir, lintingContext);
+
+        // Perform duplicate definition check for the current file.
+        const relativePath = path.relative(baseDir, filePath);
+        const fileType = getFileType(relativePath);
+        if (fileType) {
+            const defMap = duplicateCheckContext.definitions[fileType.mapTo];
+            if (defMap) {
+                const lines = txt.split(/\r?\n/);
+                lines.forEach((lineText, idx) => {
+                    const lineNo = idx + 1;
+                    const def = extractDefinition(lineText, fileType.regex);
+                    if (def) {
+                        if (defMap.has(def)) {
+                            const original = defMap.get(def);
+                            issues.push({
+                                line: lineNo,
+                                msg: `Duplicate ${fileType.name} definition: "${def}". Originally defined in ${path.relative(baseDir, original.file)} on line ${original.line}.`,
+                                level: 'error',
+                            });
+                        } else {
+                            defMap.set(def, { file: filePath, line: lineNo });
+                        }
+                    }
+                });
+            }
+        }
+        out.push({ file: filePath, issues });
+    }
+
     return out;
 }
+
 
 /**
  * 1ファイル分の lint
  * @param {string} src
+ * @param {string} filePath
+ * @param {string} baseDir
+ * @param {object} context
  * @returns {Array<{line:number, msg:string, level:'warn'|'error'}>}
  */
 export function lintText(src, filePath, baseDir, context) {
@@ -112,6 +188,22 @@ export function lintText(src, filePath, baseDir, context) {
             }
         }
 
+        // Referential integrity check
+        for (const check of REFERENCE_CHECKS) {
+            const match = trimmedLine.match(check.regex);
+            if (match) {
+                const value = match[1];
+                const definitionMap = context.definitions[check.definitionType];
+                if (definitionMap && !definitionMap.has(value)) {
+                    issues.push({
+                        line: lineNo,
+                        msg: `Reference to undefined ${check.definitionType.slice(0, -5)}: "${value}".`,
+                        level: 'error',
+                    });
+                }
+            }
+        }
+
         // c) Variable usage validation
         if (keyOnLine) {
             const inTrigger = isInTriggerContext();
@@ -139,29 +231,8 @@ export function lintText(src, filePath, baseDir, context) {
             level: 'error',
         })
     );
-    // Duplicate definition check
-    const relativePath = path.relative(baseDir, filePath);
-    const fileType = getFileType(relativePath);
 
-    if (fileType) {
-        const defMap = context.definitions[fileType.mapTo];
-        lines.forEach((lineText, idx) => {
-            const lineNo = idx + 1;
-            const def = extractDefinition(lineText, fileType.regex);
-            if (def) {
-                if (defMap.has(def)) {
-                    const original = defMap.get(def);
-                    issues.push({
-                        line: lineNo,
-                        msg: `Duplicate ${fileType.name} definition: "${def}". Originally defined in ${path.relative(baseDir, original.file)} on line ${original.line}.`,
-                        level: 'error',
-                    });
-                } else {
-                    defMap.set(def, { file: filePath, line: lineNo });
-                }
-            }
-        });
-    }
+    // Duplicate definition check has been moved to lintDirectory's second pass.
     return issues;
 }
 
@@ -183,6 +254,12 @@ const DEFINITION_TYPES = [
         path: /common\/units\/equipment\//,
         regex: /^\s*([a-zA-Z0-9_]+)\s*=\s*\{/,
         mapTo: 'equipmentNames',
+    },
+    {
+        name: 'Idea',
+        path: /common\/ideas\//,
+        regex: /^\s*([a-zA-Z0-9_]+)\s*=\s*\{/,
+        mapTo: 'ideaNames',
     },
 ];
 
