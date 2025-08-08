@@ -2,6 +2,7 @@
 import { Command } from 'commander';
 import { createMod } from './commands/create-mod.js';
 import { runLint } from './commands/lint.js';
+import { showEquation } from './commands/showEquation.js';
 
 const DEFAULT_MOD_DIR =
   process.platform === 'win32'
@@ -30,5 +31,12 @@ program
     .description('DSL 構文チェック')
     .argument('[path]', '対象フォルダ', '.')
     .action(runLint);
+
+program
+    .command('show-equation')
+    .description('Hoi4コードから読みやすい数式に書き起こす')
+    .argument('<file>', '対象ファイル')
+    .argument('<variable>', '対象の変数名')
+    .action(showEquation);
 
 program.parse();
