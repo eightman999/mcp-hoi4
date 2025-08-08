@@ -3,6 +3,7 @@ import { Command } from 'commander';
 import { createMod } from './commands/create-mod.js';
 import { runLint } from './commands/lint.js';
 import { showEquation } from './commands/showEquation.js';
+import { runGfx } from './commands/gfx.js';
 
 const DEFAULT_MOD_DIR =
   process.platform === 'win32'
@@ -38,5 +39,20 @@ program
     .argument('<file>', '対象ファイル')
     .argument('<variable>', '対象の変数名')
     .action(showEquation);
+
+const gfxCommand = program.command('gfx')
+    .description('GFX ファイルのチェックと画像変換');
+
+gfxCommand
+    .command('find-unused')
+    .description('GFX定義ファイルから参照されていないPNG画像をリストアップ')
+    .argument('[path]', '対象フォルダ', '.')
+    .action((path) => runGfx('find-unused', path));
+
+gfxCommand
+    .command('convert')
+    .description('使用中のPNGをDDSに変換')
+    .argument('[path]', '対象フォルダ', '.')
+    .action((path) => runGfx('convert', path));
 
 program.parse();
