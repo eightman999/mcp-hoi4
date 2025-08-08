@@ -39,9 +39,17 @@ const VAR_CHECK_TRIGGERS = new Set([
  */
 export async function lintDirectory(baseDir) {
     const out = [];
+    const lintingContext = {
+        definitions: {
+            countryTags: new Map(),
+            stateIds: new Map(),
+            equipmentNames: new Map(),
+        },
+    };
+
     for await (const file of walk(baseDir)) {
         const txt = await fs.readFile(file, 'utf-8');
-        const issues = lintText(txt);
+        const issues = lintText(txt, file, baseDir, lintingContext);
         out.push({ file, issues });
     }
     return out;
@@ -52,7 +60,7 @@ export async function lintDirectory(baseDir) {
  * @param {string} src
  * @returns {Array<{line:number, msg:string, level:'warn'|'error'}>}
  */
-export function lintText(src) {
+export function lintText(src, filePath, baseDir, context) {
     const issues = [];
     // The stack now holds frames with the key and its valid arguments
     const stack = []; // { line: number, key: string | null, validArgs: Set<string> | null }
@@ -131,6 +139,59 @@ export function lintText(src) {
             level: 'error',
         })
     );
+    // Duplicate definition check
+    const relativePath = path.relative(baseDir, filePath);
+    const fileType = getFileType(relativePath);
 
+    if (fileType) {
+        const defMap = context.definitions[fileType.mapTo];
+        lines.forEach((lineText, idx) => {
+            const lineNo = idx + 1;
+            const def = extractDefinition(lineText, fileType.regex);
+            if (def) {
+                if (defMap.has(def)) {
+                    const original = defMap.get(def);
+                    issues.push({
+                        line: lineNo,
+                        msg: `Duplicate ${fileType.name} definition: "${def}". Originally defined in ${path.relative(baseDir, original.file)} on line ${original.line}.`,
+                        level: 'error',
+                    });
+                } else {
+                    defMap.set(def, { file: filePath, line: lineNo });
+                }
+            }
+        });
+    }
     return issues;
+}
+
+const DEFINITION_TYPES = [
+    {
+        name: 'Country Tag',
+        path: /common\/country_tags\//,
+        regex: /^([A-Z]{3})\s*=\s*".*"$/,
+        mapTo: 'countryTags',
+    },
+    {
+        name: 'State ID',
+        path: /history\/states\//,
+        regex: /id\s*=\s*(\d+)/,
+        mapTo: 'stateIds',
+    },
+    {
+        name: 'Equipment Name',
+        path: /common\/units\/equipment\//,
+        regex: /^\s*([a-zA-Z0-9_]+)\s*=\s*\{/,
+        mapTo: 'equipmentNames',
+    },
+];
+
+function getFileType(relativePath) {
+    const normalizedPath = relativePath.replace(/\\/g, '/');
+    return DEFINITION_TYPES.find(type => type.path.test(normalizedPath));
+}
+
+function extractDefinition(line, regex) {
+    const match = line.match(regex);
+    return match ? match[1] : null;
 }
