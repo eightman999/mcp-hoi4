@@ -1,0 +1,422 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Hoi4Triggers Set",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "scope": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "args": {
+        "type": "object",
+        "properties": {
+          "original_tag_to_check": {
+            "type": "string"
+          },
+          "array": {
+            "type": "string"
+          },
+          "continent": {
+            "type": "string"
+          },
+          "ai_area": {
+            "type": "string"
+          },
+          "strategic_region": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "string"
+          },
+          "else_if": {
+            "type": "string"
+          },
+          "else": {
+            "type": "string"
+          },
+          "tooltip": {
+            "type": "string"
+          },
+          "not_tooltip": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "flag": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "days": {
+            "type": "string"
+          },
+          "dlc_name": {
+            "type": "string"
+          },
+          "setting": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "rule": {
+            "type": "string"
+          },
+          "option": {
+            "type": "string"
+          },
+          "mod": {
+            "type": "string"
+          },
+          "achievement": {
+            "type": "string"
+          },
+          "variable": {
+            "type": "string"
+          },
+          "var": {
+            "type": "string"
+          },
+          "compare": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "print_global": {
+            "type": "string"
+          },
+          "var_list": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "append": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "decision": {
+            "type": "string"
+          },
+          "modifier": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "mission": {
+            "type": "string"
+          },
+          "terrain": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "extracted": {
+            "type": "string"
+          },
+          "buildings": {
+            "type": "string"
+          },
+          "tree": {
+            "type": "string"
+          },
+          "focus": {
+            "type": "string"
+          },
+          "progress": {
+            "type": "string"
+          },
+          "ideology_name": {
+            "type": "string"
+          },
+          "ideology_or_country": {
+            "type": "string"
+          },
+          "group": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "range": {
+            "type": "string"
+          },
+          "side": {
+            "type": "string"
+          },
+          "building_name": {
+            "type": "string"
+          },
+          "ratio": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "technology": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "project": {
+            "type": "string"
+          },
+          "idea": {
+            "type": "string"
+          },
+          "trait": {
+            "type": "string"
+          },
+          "characters": {
+            "type": "string"
+          },
+          "ignore": {
+            "type": "string"
+          },
+          "slots": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "sender": {
+            "type": "string"
+          },
+          "attacker": {
+            "type": "string"
+          },
+          "defender": {
+            "type": "string"
+          },
+          "months": {
+            "type": "string"
+          },
+          "receiver": {
+            "type": "string"
+          },
+          "resources": {
+            "type": "string"
+          },
+          "occupied_country_tag": {
+            "type": "string"
+          },
+          "law": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "states": {
+            "type": "string"
+          },
+          "size": {
+            "type": "string"
+          },
+          "opponent": {
+            "type": "string"
+          },
+          "thousands": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "other": {
+            "type": "string"
+          },
+          "sub_unit_def_weights": {
+            "type": "string"
+          },
+          "archetype": {
+            "type": "string"
+          },
+          "border_state": {
+            "type": "string"
+          },
+          "count": {
+            "type": "string"
+          },
+          "types": {
+            "type": "string"
+          },
+          "exclude": {
+            "type": "string"
+          },
+          "regions": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "equipment_name": {
+            "type": "string"
+          },
+          "equipment": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "from": {
+            "type": "string"
+          },
+          "civilian_intel": {
+            "type": "string"
+          },
+          "army_intel": {
+            "type": "string"
+          },
+          "navy_intel": {
+            "type": "string"
+          },
+          "airforce_intel": {
+            "type": "string"
+          },
+          "upgrade": {
+            "type": "string"
+          },
+          "country_or_bool": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "character": {
+            "type": "string"
+          },
+          "ruling_only": {
+            "type": "string"
+          },
+          "ideology": {
+            "type": "string"
+          },
+          "specialization": {
+            "type": "string"
+          },
+          "ideology_group": {
+            "type": "string"
+          },
+          "score": {
+            "type": "string"
+          },
+          "building": {
+            "type": "string"
+          },
+          "include_locked": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string"
+          },
+          "province": {
+            "type": "string"
+          },
+          "area": {
+            "type": "string"
+          },
+          "resource_name": {
+            "type": "string"
+          },
+          "delivered": {
+            "type": "string"
+          },
+          "start_state": {
+            "type": "string"
+          },
+          "target_state": {
+            "type": "string"
+          },
+          "start_province": {
+            "type": "string"
+          },
+          "target_province": {
+            "type": "string"
+          },
+          "turns": {
+            "type": "string"
+          },
+          "building_type": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "string"
+          },
+          "ability": {
+            "type": "string"
+          },
+          "speed": {
+            "type": "string"
+          },
+          "celsius": {
+            "type": "string"
+          },
+          "weather": {
+            "type": "string"
+          },
+          "unit_type": {
+            "type": "string"
+          },
+          "battalion": {
+            "type": "string"
+          },
+          "check_mio_parent_completed": {
+            "type": "string"
+          },
+          "check_mio_mutually_exclusive": {
+            "type": "string"
+          },
+          "policy": {
+            "type": "string"
+          }
+        }
+      },
+      "since": {
+        "type": "string"
+      },
+      "desc": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "scope",
+      "args",
+      "since",
+      "desc"
+    ],
+    "title": "Hoi4Triggers"
+  }
+}

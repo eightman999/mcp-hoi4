@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/tools/gen-schema.js">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/tools/gen-schema.js" />
+              <option name="originalContent" value="const fs = require('node:fs');&#10;const generateSchema = require('generate-schema');&#10;&#10;const json = JSON.parse(fs.readFileSync('data/triggers.json', 'utf8'));&#10;const out = generateSchema.json('Hoi4Triggers', json);&#10;&#10;// Create schemas directory if it doesn't exist&#10;if (!fs.existsSync('schemas')) {&#10;  fs.mkdirSync('schemas', { recursive: true });&#10;}&#10;&#10;fs.writeFileSync('schemas/triggers.schema.json', JSON.stringify(out, null, 2));&#10;console.log('✅ schema generated');&#10;" />
+              <option name="updatedContent" value="const fs = require('node:fs');&#10;const generateSchema = require('generate-schema');&#10;&#10;// Generate schema for triggers.json&#10;const triggersJson = JSON.parse(fs.readFileSync('data/triggers.json', 'utf8'));&#10;const triggersSchema = generateSchema.json('Hoi4Triggers', triggersJson);&#10;&#10;// Generate schema for effects.json&#10;const effectsJson = JSON.parse(fs.readFileSync('data/effects.json', 'utf8'));&#10;const effectsSchema = generateSchema.json('Hoi4Effects', effectsJson);&#10;&#10;// Create schemas directory if it doesn't exist&#10;if (!fs.existsSync('schemas')) {&#10;  fs.mkdirSync('schemas', { recursive: true });&#10;}&#10;&#10;// Write both schemas&#10;fs.writeFileSync('schemas/triggers.schema.json', JSON.stringify(triggersSchema, null, 2));&#10;fs.writeFileSync('schemas/effects.schema.json', JSON.stringify(effectsSchema, null, 2));&#10;&#10;console.log('✅ triggers schema generated');&#10;console.log('✅ effects schema generated');" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

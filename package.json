@@ -1,0 +1,23 @@
+{
+  "name": "mcp-hoi4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node src/index.js",
+    "build": "echo 'JS だからビルド不要 🎉'",
+    "lint": "eslint \"src/**/*.js\" --fix"
+  },
+  "bin": {
+    "mcp-hoi4": "./src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "chalk": "^5.5.0",
+    "generate-schema": "^2.6.0",
+    "ora": "^8.2.0"
+  }
+}
