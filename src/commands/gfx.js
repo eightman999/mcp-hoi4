@@ -20,6 +20,9 @@ export async function runGfx(subcommand, target = '.') {
         case 'convert':
             await convertUsed(baseDir);
             break;
+        case 'check-missing':
+            await checkMissing(baseDir);
+            break;
         default:
             console.error(chalk.red(`Unknown subcommand: ${subcommand}`));
             process.exit(1);
@@ -137,4 +140,72 @@ async function getUsedTexturePaths(baseDir) {
         });
     }
     return usedTexturePaths;
+}
+
+async function getTexturePathsWithSource(baseDir) {
+    const texturePaths = []; // Array of { path: string, sourceFile: string }
+    for await (const file of walk(baseDir, '.gfx')) {
+        const content = await fs.readFile(file, 'utf-8');
+        const parsedPaths = parseGfx(content);
+        parsedPaths.forEach(p => {
+            texturePaths.push({ path: p, sourceFile: file });
+        });
+    }
+    return texturePaths;
+}
+
+async function checkMissing(baseDir) {
+    console.log(chalk.green('Checking for missing texture files...'));
+
+    const texturePaths = await getTexturePathsWithSource(baseDir);
+    const spinner = ora(`Checking ${texturePaths.length} texture references...`).start();
+
+    const missingFiles = [];
+    const checkedPaths = new Set();
+
+    for (const { path: texturePath, sourceFile } of texturePaths) {
+        if (checkedPaths.has(texturePath)) {
+            continue;
+        }
+        checkedPaths.add(texturePath);
+
+        const hasExtension = path.extname(texturePath) !== '';
+        const extensionsToTry = hasExtension ? [''] : ['.dds', '.tga', '.png'];
+
+        let found = false;
+        for (const ext of extensionsToTry) {
+            const fullPath = path.join(baseDir, texturePath + ext);
+            try {
+                await fs.access(fullPath);
+                found = true;
+                break;
+            } catch {
+                // fs.access throws if it can't access, which is what we want.
+            }
+        }
+
+        if (!found) {
+            missingFiles.push({ path: texturePath, sourceFile });
+        }
+    }
+
+    if (missingFiles.length > 0) {
+        spinner.fail(`Found references to ${missingFiles.length} missing texture files:`);
+
+        const groupedBySource = missingFiles.reduce((acc, { path: texturePath, sourceFile }) => {
+            const relativeSource = path.relative(baseDir, sourceFile);
+            if (!acc[relativeSource]) {
+                acc[relativeSource] = [];
+            }
+            acc[relativeSource].push(texturePath);
+            return acc;
+        }, {});
+
+        for (const [source, paths] of Object.entries(groupedBySource)) {
+            console.log(chalk.cyan(`\n▶ In ${source}:`));
+            paths.forEach(p => console.log(chalk.red(`  - ${p}`)));
+        }
+    } else {
+        spinner.succeed('All texture files referenced in .gfx files exist.');
+    }
 }
