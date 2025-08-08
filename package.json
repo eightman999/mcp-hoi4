@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node src/index.js",
     "build": "echo 'JS だからビルド不要 🎉'",
-    "lint": "eslint \"src/**/*.js\" --fix"
+    "lint": "eslint \"src/**/*.js\" --fix",
+    "gen:types": "node tools/gen-types.js"
   },
   "bin": {
     "mcp-hoi4": "./src/index.js"
@@ -18,7 +19,6 @@
   "dependencies": {
     "chalk": "^5.5.0",
     "commander": "^12.1.0",
-    "generate-schema": "^2.6.0",
     "ora": "^8.2.0"
   }
 }
