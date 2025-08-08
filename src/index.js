@@ -3,6 +3,7 @@ import { Command } from 'commander';
 import { createMod } from './commands/create-mod.js';
 import { runLint } from './commands/lint.js';
 import { runMissingKeyScan } from './commands/missing_key.js';
+import { runUnusedKeyScan } from './commands/unused_key.js';
 import { showEquation } from './commands/showEquation.js';
 
 import { getFontInfo } from './commands/get-font-info.js';
@@ -43,6 +44,12 @@ program
     .description('未定義キーを一覧化')
     .argument('[path]', '対象フォルダ', '.')
     .action(runMissingKeyScan);
+
+program
+    .command('unused-key')
+    .description('どこからも参照されていない定義済みキーを一覧化')
+    .argument('[path]', '対象フォルダ', '.')
+    .action(runUnusedKeyScan);
 
 program
     .command('show-equation')
