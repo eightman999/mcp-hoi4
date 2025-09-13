@@ -1,0 +1,42 @@
+namespace = test_events
+
+# Test Political Event
+country_event = {
+	id = test_events.1
+	title = test_events.1.t
+	desc = test_events.1.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	is_triggered_only = yes
+
+	option = {
+		name = test_events.1.a
+		add_political_power = 100
+	}
+
+	option = {
+		name = test_events.1.b
+		add_stability = 0.05
+	}
+}
+
+# Test Military Event
+country_event = {
+	id = test_events.2
+	title = test_events.2.t
+	desc = test_events.2.d
+	picture = GFX_report_event_generic_military_parade
+
+	trigger = {
+		has_war = yes
+		has_army_experience > 50
+	}
+
+	mean_time_to_happen = { days = 30 }
+
+	option = {
+		name = test_events.2.a
+		add_command_power = 25
+		add_army_experience = -25
+	}
+}

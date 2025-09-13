@@ -1,0 +1,1 @@
+{"version":3,"file":"mod-creator.d.ts","sourceRoot":"","sources":["../../src/utils/mod-creator.ts"],"names":[],"mappings":"AAGA,MAAM,WAAW,iBAAiB;IAChC,OAAO,EAAE,MAAM,CAAC;IAChB,KAAK,EAAE,MAAM,EAAE,CAAC;CACjB;AAED,wBAAsB,SAAS,CAAC,OAAO,EAAE,MAAM,EAAE,OAAO,EAAE,MAAM,GAAG,OAAO,CAAC,iBAAiB,CAAC,CAyD5F"}

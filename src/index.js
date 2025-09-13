@@ -9,6 +9,7 @@ import { showEquation } from './commands/showEquation.js';
 import { getFontInfo } from './commands/get-font-info.js';
 
 import { runGfx } from './commands/gfx.js';
+import { runCWToolsValidation, runCWToolsParse, getCWToolsVersion, checkCWToolsAvailability } from './commands/cwtools.js';
 
 
 const DEFAULT_MOD_DIR =
@@ -85,6 +86,44 @@ gfxCommand
     .description('GFX定義ファイルで参照されている存在しない画像をリストアップ')
     .argument('[path]', '対象フォルダ', '.')
     .action((path) => runGfx('check-missing', path));
+
+// CWTools commands
+const cwtoolsCommand = program.command('cwtools')
+    .description('CWTools F#ライブラリを使用した高度な検証・解析');
+
+cwtoolsCommand
+    .command('validate')
+    .description('MODファイルの詳細検証 (CWTools使用)')
+    .argument('[path]', '対象フォルダ', '.')
+    .action(runCWToolsValidation);
+
+cwtoolsCommand
+    .command('parse')
+    .description('スクリプトファイルのパース (CWTools使用)')
+    .argument('<file>', '対象ファイル')
+    .action(runCWToolsParse);
+
+cwtoolsCommand
+    .command('version')
+    .description('CWToolsのバージョン情報を表示')
+    .action(async () => {
+        const version = await getCWToolsVersion();
+        console.log(`CWTools Version: ${version}`);
+    });
+
+cwtoolsCommand
+    .command('check')
+    .description('CWToolsの動作確認')
+    .action(async () => {
+        const available = await checkCWToolsAvailability();
+        if (available === true) {
+            console.log('✅ CWTools is available and ready to use');
+        } else if (available === 'fallback') {
+            console.log('⚠️  CWTools is available in simplified mode');
+        } else {
+            console.log('❌ CWTools is not available');
+        }
+    });
 
 
 program.parse();

@@ -1,0 +1,18 @@
+l_english:
+ # Focus Tree
+ test_focus_1:0 "Test Focus 1"
+ test_focus_1_desc:0 "This is a test focus for demonstration purposes."
+ test_focus_2:0 "Military Improvement"
+ test_focus_2_desc:0 "Focus on improving our military capabilities."
+ test_focus_3:0 "Industrial Development"
+ test_focus_3_desc:0 "Develop our industrial base for the future."
+
+ # Events
+ test_events.1.t:0 "Political Decision"
+ test_events.1.d:0 "We face an important political decision that will shape our nation's future."
+ test_events.1.a:0 "Increase Political Power"
+ test_events.1.b:0 "Improve Stability"
+
+ test_events.2.t:0 "Military Experience"
+ test_events.2.d:0 "Our military has gained valuable experience from recent conflicts."
+ test_events.2.a:0 "Use Experience for Command"
